@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.15" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="http://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
+<link rel="stylesheet" href="/css/normalize.css">
+<link rel="stylesheet" href="/css/skeleton.css">
+<link rel="stylesheet" href="/css/custom.css">
+<link rel="alternate" href="/index.xml" type="application/rss+xml" title="abhicodes">
+<title>Some linux shortcuts - abhicodes</title>
+</head>
+<body>
+
+<div class="container">
+
+	<header role="banner">
+		
+	</header>
+
+
+	<main role="main">
+		<article itemscope itemtype="http://schema.org/BlogPosting">
+			<h1 class="entry-title" itemprop="headline">Some linux shortcuts</h1>
+			<span class="entry-meta"><time itemprop="datePublished" datetime="2015-03-18">March 18, 2015</time></span>
+			<section itemprop="entry-text">
+				<p><strong>iptables</strong></p>
+
+<p>Accepting a port:</p>
+
+<pre><code>[sudo] iptables -A INPUT -i eth0 -p tcp --sport 3000 -j ACCEPT
+</code></pre>
+
+<p>Setting up port routing using (from port 80 to 8000):</p>
+
+<pre><code>[sudo] iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8000
+</code></pre>
+
+<p>Deleting existing rules:</p>
+
+<pre><code>[sudo] iptables -F
+</code></pre>
+
+<p><strong>get ip</strong></p>
+
+<pre><code>dig +short myip.opendns.com @resolver1.opendns.com
+</code></pre>
+
+<p>or if you don&rsquo;t have dig</p>
+
+<pre><code>curl eth0.me
+</code></pre>
+
+<p><strong>speed test</strong></p>
+
+<p>Run this command and test the KB/s:</p>
+
+<pre><code>wget --output-document=/dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip
+</code></pre>
+
+			</section>
+		</article>
+	</main>
+
+
+	<footer role="contentinfo">
+		<div class="hr"></div>
+		<div class="footer-link">
+			
+			
+			
+			
+		</div>
+		<div class="copyright">Copyright &copy; Abhi Agarwal</div>
+	</footer>
+
+</div>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+</body>
+</html>

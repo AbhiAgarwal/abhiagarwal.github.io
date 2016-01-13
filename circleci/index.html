@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.15" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="http://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
+<link rel="stylesheet" href="/css/normalize.css">
+<link rel="stylesheet" href="/css/skeleton.css">
+<link rel="stylesheet" href="/css/custom.css">
+<link rel="alternate" href="/index.xml" type="application/rss+xml" title="abhicodes">
+<title>Using CircleCI to automate builds - abhicodes</title>
+</head>
+<body>
+
+<div class="container">
+
+	<header role="banner">
+		
+	</header>
+
+
+	<main role="main">
+		<article itemscope itemtype="http://schema.org/BlogPosting">
+			<h1 class="entry-title" itemprop="headline">Using CircleCI to automate builds</h1>
+			<span class="entry-meta"><time itemprop="datePublished" datetime="2016-01-10">January 10, 2016</time></span>
+			<section itemprop="entry-text">
+				<p>Using Continuous Integration has shown to be incredibly powerful - especially when you combine it with Github/Bitbucket/any version control platform. CircleCI/TravisCI/Jenkins and any other CI frameworks allow programmers to automatically deploy, and test their code on a <strong>clean environment</strong>. The clean environment part is important as sometimes programmers have different dependencies on their own machines and on their servers. This becomes a problem as it breaks deployments, and causes programming errors in the future. The CI platforms give programmers the ability to test their code in a controlled environment before deploying it onto their own servers. The CI platforms takes care of installing the dependencies programmatically on this staging server, and in a way it acts as a middleman.</p>
+
+<p>Even if you are building a library it becomes useful as you can run your tests and make sure your library builds under this clean environment. As you get more collaborators for your projects you can make sure the additions they make run in this environment and not just on their own computers.</p>
+
+<p>This is just one benefit CI platforms have. There’s a ton of benefits:</p>
+
+<ul>
+<li>Automate builds and deployment.</li>
+<li>Running tests (bug detection!)</li>
+<li>Everyone is able to monitor the builds.</li>
+<li>Metrics can be generated on how long builds take, how complex the code is, and many other things. It helps make it easy to notice what the flaws in the process are.</li>
+<li>It’s ruthless because the task is being done by the machine. If it encounters an error in the build it’ll halt rather than deploying it anyways.</li>
+</ul>
+
+<p>There’s also costs associated with CI platforms:</p>
+
+<ul>
+<li>Usually rely on a complex platform. This reduces flexibility over using <a href="http://fabfile.org/">Fabric</a> or some other method of deployment (they can also be used in conjunction).</li>
+
+<li><p>You don’t always have complete control over all the packages that they install. They use their own base image for the OS that you can’t overwrite (can be solved if you use Jenkins or any other CI solution in-house).</p></li>
+
+<li><p>It’s expensive if you want parallelism or any type of extra features.</p></li>
+</ul>
+
+<p>It’s incredible simple to get started with a CI platform as well! CircleCI is one I love using because it’s easy to get started + they allow developers to use private repositories (rather than TravisCI where you have to pay for a private repository). </p>
+
+<p>To get started you can go on <a href="http://circleci.com">circleci.com</a> and login through your Github (or Bitbucket, etc). Then you can just add the repositories you want to add CircleCI to by visiting the “Add Projects” section. Now your repository to be built automatically when you push any new commits to it on Github. Before you start pushing code - you’ve to do one final thing. You’ve to add a file called circle.yml. This file tells CircleCI what it’s supposed to do when you push to the master branch of your repository.</p>
+
+<p>An example of a circle.yml file is below:
+<script src="https://gist.github.com/AbhiAgarwal/ce90915c99120a986a7e.js"></script></p>
+
+<p>This is a simple circle.yml document that builds a jekyll website and then uploads it to Rackspace Cloud Files. Let’s look through the code:</p>
+
+<ul>
+<li>The general section at the top is to give CircleCI information about your branches and many other settings. </li>
+<li>The machine setting tells CircleCI which timezone, OS, programming language versions (etc) you want to use. These are settings on how it should spin up the virtual machine.</li>
+<li>The next is dependencies. It tells CircleCI the software dependencies you need to install. There’s 3 settings within dependencies: pre, overwrite, and post. We’re using post in this script which means install these gems after CircleCI has ran it’s own dependency commands. Pre is before CircleCI runs it’s own dependency commands, and overwrite basically means run these instead of CircleCI’s. </li>
+<li>The test section is just to tell CircleCI how to run your tests!</li>
+<li>The last is deployment. You can tell CircleCI how to deploy each of the branches you want CircleCI to run on. Here I’m using <a href="https://github.com/cloudnull/turbolift">turbolift</a> to upload files to Rackspace Cloud Files. The values starting with $ are just environment variables that you’re able to set through the Project Settings section of CircleCI.</li>
+</ul>
+
+<p>There’s more documentation <a href="https://circleci.com/docs/configuration">here</a>. You can do a lot using CircleCI. They have a lot of interesting documentation. I’ve used it for all sorts of scenarios. You can run node scripts, python scripts, and automate pretty much anything that you can do through your command line. I have also added some examples of circle.yml files (that we use in production at <a href="http://github.com/techatnyu">Tech@NYU</a>) <a href="https://gist.github.com/AbhiAgarwal/6e45a81375cf6d3eddf9">here</a>.</p>
+
+			</section>
+		</article>
+	</main>
+
+
+	<footer role="contentinfo">
+		<div class="hr"></div>
+		<div class="footer-link">
+			
+			
+			
+			
+		</div>
+		<div class="copyright">Copyright &copy; Abhi Agarwal</div>
+	</footer>
+
+</div>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+</body>
+</html>

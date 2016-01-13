@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.15" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="http://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
+<link rel="stylesheet" href="/css/normalize.css">
+<link rel="stylesheet" href="/css/skeleton.css">
+<link rel="stylesheet" href="/css/custom.css">
+<link rel="alternate" href="/index.xml" type="application/rss+xml" title="abhicodes">
+<title>SSH tunnel - abhicodes</title>
+</head>
+<body>
+
+<div class="container">
+
+	<header role="banner">
+		
+	</header>
+
+
+	<main role="main">
+		<article itemscope itemtype="http://schema.org/BlogPosting">
+			<h1 class="entry-title" itemprop="headline">SSH tunnel</h1>
+			<span class="entry-meta"><time itemprop="datePublished" datetime="2015-03-19">March 19, 2015</time></span>
+			<section itemprop="entry-text">
+				<p>SSH tunneling allows an individual to use their server as a proxy for their internet connection. This means that the bytes that you send and recieve from websites/servers will go through the server you&rsquo;re using.</p>
+
+<p>The benefit of this is that it reduces the risk of your main computer being exposed as your IP becomes the servers IP, and all the requests to external websites/servers are made by the server rather than your computer. In addition, if you&rsquo;re in an external country you&rsquo;re able to use those servers to pretend like you&rsquo;re in another country. For example, if I want to watch netflix and I&rsquo;m currently in China then I&rsquo;m able to setup a SSH tunnel through a server in the US to watch netflix.</p>
+
+<p>Basically the command is:</p>
+
+<pre><code>ssh -D 8080 -C -N username@servername
+</code></pre>
+
+<p>If you have your SSH keys in the authorized_keys of your server then you&rsquo;re set, but if you don&rsquo;t then enter the password for the user. Keep this connection open - you should not expect any output right away.</p>
+
+<p>This will setup a proxy at port 8080 on your computer. The username is usually root for your server, but can be replaced if you created a new user. The servername is usually the IP of your server or the domain name. For example, my username@servername could be abhi@abhi.co where abhi is the username and abhi.co is the servername. Your hostname could be 28.254.39.67.</p>
+
+<p>A sample command would be:</p>
+
+<pre><code>ssh -D 8080 -C -N abhi@abhi.co
+</code></pre>
+
+<p>The next step is limited to Mac OSX. Go to System Preferences, Network, Wifi/Ethernet (depending on what you&rsquo;re using to connect), Advanced, Proxy. Then turn on SOCKS Proxy with the details being 127.0.0.1:8080. This means that the input before the colon is 127.0.0.1, and the input after the colon is 8080.</p>
+
+<p>Some people have <a href="https://chrome.google.com/webstore/detail/hola-better-internet/gkojfkhlekighikafcpjkiklfbnlmeio?hl=en">Hola</a> installed on Chrome. Disable this if you&rsquo;re going to use the proxy with Chrome. Hola takes control of the proxy in Chrome when it&rsquo;s enabled (it&rsquo;s how it manages to connect you through different countries).</p>
+
+<p>This step is for Linux. You have to export your http_proxy variable in order for this to work.</p>
+
+<pre><code>export http_proxy=&quot;http://127.0.0.1:8080&quot;
+</code></pre>
+
+<p>Run this in the command line.</p>
+
+<p>Now try and visit <a href="http://whatismyip.com/">whatismyip.com</a>, and see if the IP reflects the IP of your server. Congrats! You&rsquo;ve just setup a SSH tunnel :) Or run this command in the command line!</p>
+
+<pre><code>dig +short myip.opendns.com @resolver1.opendns.com
+</code></pre>
+
+			</section>
+		</article>
+	</main>
+
+
+	<footer role="contentinfo">
+		<div class="hr"></div>
+		<div class="footer-link">
+			
+			
+			
+			
+		</div>
+		<div class="copyright">Copyright &copy; Abhi Agarwal</div>
+	</footer>
+
+</div>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+</body>
+</html>
