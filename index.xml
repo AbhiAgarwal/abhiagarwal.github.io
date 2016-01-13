@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>abhicodes</title>
-    <link>http://abhiagarwal.github.io/</link>
+    <link>http://code.abhi.co/</link>
     <description>Recent content on abhicodes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 10 Jan 2016 14:19:00 +0700</lastBuildDate>
-    <atom:link href="http://abhiagarwal.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://code.abhi.co/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Using CircleCI to automate builds</title>
-      <link>http://abhiagarwal.github.io/circleci/</link>
+      <link>http://code.abhi.co/circleci/</link>
       <pubDate>Sun, 10 Jan 2016 14:19:00 +0700</pubDate>
       
-      <guid>http://abhiagarwal.github.io/circleci/</guid>
+      <guid>http://code.abhi.co/circleci/</guid>
       <description>&lt;p&gt;Using Continuous Integration has shown to be incredibly powerful - especially when you combine it with Github/Bitbucket/any version control platform. CircleCI/TravisCI/Jenkins and any other CI frameworks allow programmers to automatically deploy, and test their code on a &lt;strong&gt;clean environment&lt;/strong&gt;. The clean environment part is important as sometimes programmers have different dependencies on their own machines and on their servers. This becomes a problem as it breaks deployments, and causes programming errors in the future. The CI platforms give programmers the ability to test their code in a controlled environment before deploying it onto their own servers. The CI platforms takes care of installing the dependencies programmatically on this staging server, and in a way it acts as a middleman.&lt;/p&gt;
 
 &lt;p&gt;Even if you are building a library it becomes useful as you can run your tests and make sure your library builds under this clean environment. As you get more collaborators for your projects you can make sure the additions they make run in this environment and not just on their own computers.&lt;/p&gt;
@@ -62,10 +62,10 @@
     
     <item>
       <title>Small code optimizations</title>
-      <link>http://abhiagarwal.github.io/small-optimizations/</link>
+      <link>http://code.abhi.co/small-optimizations/</link>
       <pubDate>Fri, 20 Mar 2015 14:19:00 +0700</pubDate>
       
-      <guid>http://abhiagarwal.github.io/small-optimizations/</guid>
+      <guid>http://code.abhi.co/small-optimizations/</guid>
       <description>&lt;p&gt;There&amp;rsquo;s a lot of optimizations that are done by the compiler at compile time. Here are a couple of them! Some compilers do these optimizations and some don&amp;rsquo;t.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Strength_reduction&#34;&gt;Strength reduction&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
@@ -109,10 +109,10 @@ for (i = 0; i &amp;lt; N; i++)
     
     <item>
       <title>SSH tunnel</title>
-      <link>http://abhiagarwal.github.io/ssh-tunnel/</link>
+      <link>http://code.abhi.co/ssh-tunnel/</link>
       <pubDate>Thu, 19 Mar 2015 14:19:00 +0700</pubDate>
       
-      <guid>http://abhiagarwal.github.io/ssh-tunnel/</guid>
+      <guid>http://code.abhi.co/ssh-tunnel/</guid>
       <description>&lt;p&gt;SSH tunneling allows an individual to use their server as a proxy for their internet connection. This means that the bytes that you send and recieve from websites/servers will go through the server you&amp;rsquo;re using.&lt;/p&gt;
 
 &lt;p&gt;The benefit of this is that it reduces the risk of your main computer being exposed as your IP becomes the servers IP, and all the requests to external websites/servers are made by the server rather than your computer. In addition, if you&amp;rsquo;re in an external country you&amp;rsquo;re able to use those servers to pretend like you&amp;rsquo;re in another country. For example, if I want to watch netflix and I&amp;rsquo;m currently in China then I&amp;rsquo;m able to setup a SSH tunnel through a server in the US to watch netflix.&lt;/p&gt;
@@ -151,10 +151,10 @@ for (i = 0; i &amp;lt; N; i++)
     
     <item>
       <title>Some linux shortcuts</title>
-      <link>http://abhiagarwal.github.io/linux-shortcuts/</link>
+      <link>http://code.abhi.co/linux-shortcuts/</link>
       <pubDate>Wed, 18 Mar 2015 14:19:00 +0700</pubDate>
       
-      <guid>http://abhiagarwal.github.io/linux-shortcuts/</guid>
+      <guid>http://code.abhi.co/linux-shortcuts/</guid>
       <description>&lt;p&gt;&lt;strong&gt;iptables&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;Accepting a port:&lt;/p&gt;
