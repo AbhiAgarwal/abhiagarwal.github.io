@@ -3,7 +3,13 @@
   
   <url>
     <loc>http://abhiagarwal.github.io/</loc>
+    <lastmod>2016-01-13T14:19:00+07:00</lastmod>
     <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://abhiagarwal.github.io/about/</loc>
+    <lastmod>2016-01-13T14:19:00+07:00</lastmod>
   </url>
   
 </urlset>
