@@ -6,8 +6,444 @@
     <description>Recent content on abhicodes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 10 Jan 2016 14:19:00 +0700</lastBuildDate>
+    <lastBuildDate>Wed, 20 Jan 2016 14:19:00 +0700</lastBuildDate>
     <atom:link href="http://code.abhi.co/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Prototyping using Django</title>
+      <link>http://code.abhi.co/prototyping-django/</link>
+      <pubDate>Wed, 20 Jan 2016 14:19:00 +0700</pubDate>
+      
+      <guid>http://code.abhi.co/prototyping-django/</guid>
+      <description>
+
+&lt;p&gt;I am writing a series on how to prototype and release a product very fast using just a few tools! This is a three-part tutorial. The first part will be writing an API in Django. The second part will be writing an iOS app using React-native, and the last part will be writing a web app in Angular.JS. These three tools will allow you to prototype and push something out the door very quickly!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Lets get started with writing our API in Django! All you need to know for now is that “Django is a high-level Python Web framework”. If you’re not sure what a web framework is or haven’t built an API in the past then just follow along, and hopefully you’ll get the gist of it!&lt;/p&gt;
+
+&lt;p&gt;In this tutorial we’ll be using Python 2.7.10. We&amp;rsquo;re going to be making an app to show a list of events that are happening. Firstly, lets setup a &lt;a href=&#34;http://docs.python-guide.org/en/latest/dev/virtualenvs&#34;&gt;virtual environment&lt;/a&gt;! Specifically we’ll be using &lt;a href=&#34;http://virtualenvwrapper.readthedocs.org/en/latest/index.html&#34;&gt;virtualenvwrapper&lt;/a&gt;. This allows you to easily switch between virtual environments. If you’ve already setup virtual environments - feel free to use your own and skip this part.&lt;/p&gt;
+
+&lt;p&gt;Run these following commands in your Terminal:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;pip install virtualenv
+pip install virtualenvwrapper
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Put these into your &lt;code&gt;~/.bash_profile&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;export WORKON_HOME=$HOME/.virtualenvs
+source /usr/local/bin/virtualenvwrapper.sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that you have &lt;code&gt;virtualenvwrapper&lt;/code&gt; installed, you can create a virtual environment by running &lt;code&gt;mkvirtualenv &amp;lt;project_name&amp;gt;&lt;/code&gt;. We&amp;rsquo;re going to be calling our project &lt;code&gt;today&lt;/code&gt;. This is just the name of your product. Substitute it with whatever you want! &lt;code&gt;todayapp&lt;/code&gt; is just the name of the virtual environment - feel free to call it your project name. So go ahead and run:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mkvirtualenv todayapp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After you create this virtual environment you should be inside it! You should see something like this: &lt;code&gt;(todayapp)abhiagarwal at Abhis-MacBook-Pro in ~&lt;/code&gt; in your Terminal window. The first part just lets you know which virtual environment you are in. To leave the virtual environment just do &lt;code&gt;deactivate&lt;/code&gt;, and to go into a virtual environment run &lt;code&gt;workon todayapp&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This is great! Now you have a virtual environment setup. We can start building our Django API! Let&amp;rsquo;s start the Django development! First you&amp;rsquo;ll need to install django in your virtual environment. So stay in the virtual environment you&amp;rsquo;re in, and run:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;pip install Django==1.9
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This should install Django with the version 1.9. We&amp;rsquo;ll stick with version 1.9 since it&amp;rsquo;s the newest version (at the time this post was written). If you want to look at all the Python packages that are available in your virtual environment you can do a &lt;code&gt;pip freeze&lt;/code&gt;. Right now when you do run &lt;code&gt;pip freeze&lt;/code&gt; you should see:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;Django==1.9
+wheel==0.24.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This should have installed a command in your environment called &lt;code&gt;django-admin&lt;/code&gt;. We&amp;rsquo;ll put our API in a folder called &lt;code&gt;today-api&lt;/code&gt;. So go ahead and do:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mkdir today-api
+cd today-api
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The location of where this is on your computer is not too important as this point. To start a new Django project you can run:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;django-admin startproject today
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will create a directory called today in the folder. At this point you should see the following structure:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.
+├── today-api
+    └── today
+        ├── manage.py
+        └── today
+            ├── __init__.py
+            ├── settings.py
+            ├── urls.py
+            └── wsgi.py
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Each of these files are responsible for how your Django app will run. Taken from the &lt;a href=&#34;https://docs.djangoproject.com/en/1.9/intro/tutorial01/&#34;&gt;Django documentation&lt;/a&gt; (which is quite incredible and useful):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&amp;ldquo;The outer &lt;code&gt;today/&lt;/code&gt; root directory is just a container for your project. Its name doesn’t matter to Django; you can rename it to anything you like.&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;&amp;ldquo;&lt;code&gt;manage.py&lt;/code&gt;: A command-line utility that lets you interact with this Django project in various ways. You can read all the details about manage.py in &lt;a href=&#34;https://docs.djangoproject.com/en/1.9/ref/django-admin/&#34;&gt;django-admin and manage.py&lt;/a&gt;.&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;&amp;ldquo;The inner &lt;code&gt;today/&lt;/code&gt; directory is the actual Python package for your project. Its name is the Python package name you’ll need to use to import anything inside it (e.g. today.urls).&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;&amp;ldquo;&lt;code&gt;today/__init__.py&lt;/code&gt;: An empty file that tells Python that this directory should be considered a Python package. (Read more about &lt;a href=&#34;https://docs.python.org/2/tutorial/modules.html#packages&#34;&gt;packages&lt;/a&gt; in the official Python docs if you’re a Python beginner.)&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;&amp;ldquo;&lt;code&gt;today/settings.py&lt;/code&gt;: Settings/configuration for this Django project. Django settings will tell you all about how settings work.&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;&amp;ldquo;&lt;code&gt;today/urls.py&lt;/code&gt;: The URL declarations for this Django project; a “table of contents” of your Django-powered site. You can read more about URLs in &lt;a href=&#34;https://docs.djangoproject.com/en/1.9/topics/http/urls/&#34;&gt;URL dispatcher&lt;/a&gt;.&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;&amp;ldquo;&lt;code&gt;today/wsgi.py&lt;/code&gt;: An entry-point for WSGI-compatible web servers to serve your project. See &lt;a href=&#34;https://docs.djangoproject.com/en/1.9/howto/deployment/wsgi/&#34;&gt;How to deploy with WSGI&lt;/a&gt; for more details.&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Especially when you&amp;rsquo;re prototyping you don&amp;rsquo;t want to reinvent the wheel. So we&amp;rsquo;re going to be replying on a couple Python packages that will help us accelerate our development. First of all we&amp;rsquo;re going to be setting up the structure of our application. This is where we begin using some Django best practices.&lt;/p&gt;
+
+&lt;p&gt;To initially run your Django app you can &lt;code&gt;cd today&lt;/code&gt;, and run &lt;code&gt;./manage.py runserver&lt;/code&gt;. It should alert you by saying that &amp;ldquo;you have unapplied migrations; your app may not work properly until they are applied&amp;rdquo;. This is Django telling you that you basically have to run database migrations. You can simply follow what Django tells you to do and run &lt;code&gt;python manage.py migrate&lt;/code&gt;. This is interchangeable with &lt;code&gt;./manage.py migrate&lt;/code&gt;. Basically what this means is that Django is importing the necessary models at the beginning into your database. Initially, Django uses SQLite. So when you run the migrations you should see &lt;code&gt;db.sqlite3&lt;/code&gt; in your directory. We&amp;rsquo;re going to be switching to using another database later on, but for now we&amp;rsquo;ll stick with SQLite.&lt;/p&gt;
+
+&lt;p&gt;Now you should be able to run your Django app. Run it, and visit &lt;code&gt;http://127.0.0.1:8000/&lt;/code&gt; on your computer. When you visit this URL you should see &lt;code&gt;It worked!&lt;/code&gt; at the beginning! Congrats! You&amp;rsquo;ve managed to run your Django web server. Whatever happens next &amp;ndash; you&amp;rsquo;ve still managed to run your Django application!&lt;/p&gt;
+
+&lt;h2 id=&#34;adding-apps:c14673d221a5785f50bc4d43002090cd&#34;&gt;Adding apps&lt;/h2&gt;
+
+&lt;p&gt;The main folder in your Django project (called &lt;code&gt;today&lt;/code&gt;) is called a project. Now we have to add &lt;code&gt;apps&lt;/code&gt; (applications). These apps are the smaller modules in your Django application that represent what you&amp;rsquo;re building. Let&amp;rsquo;s set up our apps folder:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cd today
+$ mkdir apps
+$ cd apps
+$ touch __init__.py
+$ mkdir events
+$ cd events
+$ touch __init__.py
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now your directory structure should look like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.
+└── today-api
+    └── today
+        ├── db.sqlite3
+        ├── manage.py
+        └── today
+            ├── __init__.py
+            ├── apps
+            │   ├── __init__.py
+            │   └── events
+            │       └── __init__.py
+            ├── settings.py
+            ├── urls.py
+            └── wsgi.py
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Great! Now we&amp;rsquo;ve setup an app called &lt;code&gt;events&lt;/code&gt; in our project. This will be the app in which we write the logic for our Events API. First, create a file called &lt;code&gt;models.py&lt;/code&gt; in the folder &lt;code&gt;events&lt;/code&gt;. You can do this by doing &lt;code&gt;touch models.py&lt;/code&gt;. In that folder we&amp;rsquo;re going to be writing the logic for our Event model. A model can be seen as a grouping of different methods and variables. If you have not encountered Object Oriented Programming before then don&amp;rsquo;t worry! Our Event model is just a blueprint for how we will save and load data from the database. In the file &lt;code&gt;models.py&lt;/code&gt; paste this following code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# -*- coding: utf-8 -*-
+from django.db import models
+
+
+class Event(models.Model):
+    name = models.TextField(blank=False, max_length=100)
+    description = models.TextField(blank=False, max_length=1000)
+    date = models.DateTimeField(blank=False, null=False)
+
+    def __unicode__(self):
+        return self.name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We initially have three fields in our model. The first one is called &lt;code&gt;name&lt;/code&gt;, and the second one is called &lt;code&gt;description&lt;/code&gt;, and the third one is called &lt;code&gt;date&lt;/code&gt;. The name and description field are of type &lt;code&gt;TextField&lt;/code&gt;. Django comes with &amp;ldquo;batteries installed&amp;rdquo;, which means that it provides us with a lot of things we can just start using. The date field is of type &lt;code&gt;DateTimeField&lt;/code&gt;. We can pass in certain parameters into these fields. In the name field we pass in:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;blank=False&lt;/code&gt; &amp;ndash; which means that it can&amp;rsquo;t be blank &amp;ndash; it&amp;rsquo;s not an optional field&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;max_length=100&lt;/code&gt; &amp;ndash; the name of the event can be at most 100 characters.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In the date field we pass in:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;null=False&lt;/code&gt; &amp;ndash; Will not set the value to be NULL in your database. &amp;ldquo;Blank values for Django field types such as DateTimeField or ForeignKey will be stored as NULL in the DB&amp;rdquo; (&lt;a href=&#34;http://stackoverflow.com/questions/8609192/differentiate-null-true-blank-true-in-django&#34;&gt;ref&lt;/a&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Here we&amp;rsquo;ve setup a basic model for a single event. Each event must have a name, a description, and a date. We should also go ahead and add an &lt;code&gt;image&lt;/code&gt; field. An event could have an image! Underneath date you should add:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;image = models.URLField(blank=True, max_length=500)&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This uses the &lt;code&gt;URLField&lt;/code&gt; that is built into Django. This is different from &lt;code&gt;TextField&lt;/code&gt; because it internally validates and makes sure the URL is of correct format when you add it. Here we use &lt;code&gt;blank=True&lt;/code&gt;, which means that image is an optional field. When we&amp;rsquo;re adding a new event we might not have an image for it &amp;ndash; the optional part makes it so we don&amp;rsquo;t have too. The final product should look like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# -*- coding: utf-8 -*-
+from django.db import models
+
+
+class Event(models.Model):
+    name = models.TextField(blank=False, max_length=100)
+    description = models.TextField(blank=False, max_length=1000)
+    date = models.DateTimeField(blank=False, null=False)
+    image = models.URLField(blank=True, max_length=500)
+
+    def __unicode__(self):
+        return self.name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Great! So we&amp;rsquo;ve added our basic model. Now, add a file called &lt;code&gt;admin.py&lt;/code&gt; by doing &lt;code&gt;touch admin.py&lt;/code&gt;. Django comes built in with an admin interface where you&amp;rsquo;re able to see all the data in your models. This file tells Django to add your model to the admin interface. In this file you should go ahead and just add:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# -*- coding: utf-8 -*-
+from django.contrib import admin
+
+from .models import Event
+
+admin.site.register(Event)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that we&amp;rsquo;ve added our models, and admin files we will begin to start building our API views. First we&amp;rsquo;ve to add a Django package and configure it. We&amp;rsquo;re going to be using Django Rest Framework, which makes it easy to build REST APIs. Go ahead and run this (in your virtual environment):&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;pip install djangorestframework==3.3.2&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;At this point we should create a &lt;code&gt;requirements.txt&lt;/code&gt; file. This will allow you to track the Python packages you&amp;rsquo;ve installed. Go back to the base &lt;code&gt;today-api&lt;/code&gt; folder. Then run &lt;code&gt;touch requirements.txt&lt;/code&gt;. Now you&amp;rsquo;re able to use &lt;code&gt;pip freeze&lt;/code&gt;, and put the output into requirements.txt. To do this just execute the command &lt;code&gt;pip freeze &amp;gt; requirements.txt&lt;/code&gt;. This should put your current Python packages into the file. To view the file you can just run &lt;code&gt;cat requirements.txt&lt;/code&gt; in your Terminal. You should see:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Django==1.9
+djangorestframework==3.3.2
+wheel==0.24.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Having your requirements in a file is important. In the future to install your requirements you&amp;rsquo;re simply able to do &lt;code&gt;pip install -r requirements.txt&lt;/code&gt;. Your directory should finally look like this now:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.
+└── today-api
+    ├── requirements.txt
+    └── today
+        ├── db.sqlite3
+        ├── manage.py
+        └── today
+            ├── __init__.py
+            ├── apps
+            │   ├── __init__.py
+            │   └── events
+            │       ├── __init__.py
+            │       ├── admin.py
+            │       └── models.py
+            ├── settings.py
+            ├── urls.py
+            └── wsgi.py
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;setting-up-settings-py:c14673d221a5785f50bc4d43002090cd&#34;&gt;Setting up settings.py&lt;/h2&gt;
+
+&lt;p&gt;Now open up your &lt;code&gt;settings.py&lt;/code&gt; file. It should be in the same directory as the &lt;code&gt;apps&lt;/code&gt; folder is. In the &lt;code&gt;settings.py&lt;/code&gt; file you should see a variable called &lt;code&gt;INSTALLED_APPS&lt;/code&gt;. This is what governs what apps Django runs for you when you do &lt;code&gt;./manage.py runserver&lt;/code&gt;. We have to add our new apps to it. To this we will add &lt;code&gt;&#39;rest_framework&#39;&lt;/code&gt;, and &lt;code&gt;&#39;today.apps.events&#39;&lt;/code&gt;. Django paths are set relative to folder &lt;code&gt;manage.py&lt;/code&gt; is in. So your files will all be relative to the folder &lt;code&gt;today&lt;/code&gt;. The &lt;code&gt;urls.py&lt;/code&gt; file will be &lt;code&gt;today.urls&lt;/code&gt;, etc. Lets now change the &lt;code&gt;INSTALLED_APPS&lt;/code&gt; to:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;INSTALLED_APPS = [
+    &#39;django.contrib.admin&#39;,
+    &#39;django.contrib.auth&#39;,
+    &#39;django.contrib.contenttypes&#39;,
+    &#39;django.contrib.sessions&#39;,
+    &#39;django.contrib.messages&#39;,
+    &#39;django.contrib.staticfiles&#39;,
+    &#39;rest_framework&#39;,
+    &#39;today.apps.events&#39;,
+]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;making-migrations:c14673d221a5785f50bc4d43002090cd&#34;&gt;Making migrations&lt;/h2&gt;
+
+&lt;p&gt;Now we have to do something exciting. We have to run migrations! So now that you&amp;rsquo;ve created an Event model we have to take the schema you wrote, and make Django make a Table for that in the database. You&amp;rsquo;ve virtually constructed this Model with fields, but now how are we going to mirror this structure in the database? Well! Django comes built in with these tools. Run &lt;code&gt;./manage.py makemigrations events&lt;/code&gt;. The &lt;code&gt;events&lt;/code&gt; is which specific app we are talking about. When you run this &amp;ndash; it should return:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;Migrations for &#39;events&#39;:
+  0001_initial.py:
+    - Create model Event
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If it prints something different then you&amp;rsquo;ve made a mistake somewhere. This command just creates the migrations. It creates a folder called &lt;code&gt;migrations&lt;/code&gt; (which you should not remove!) inside your &lt;code&gt;apps/events&lt;/code&gt; folder, and creates a python file inside it with the specifics of your schema. Now you should run &lt;code&gt;./manage.py migrate events&lt;/code&gt;. This should return:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;Operations to perform:
+  Apply all migrations: events
+Running migrations:
+  Rendering model states... DONE
+  Applying events.0001_initial... OK
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This means that we&amp;rsquo;ve successfully taken our schema and added these fields into the database. Whenever you add a new field to your model &amp;ndash; you should always make a migration (using &lt;code&gt;makemigrations&lt;/code&gt;), and then migrate it (using &lt;code&gt;migrate&lt;/code&gt;). Django makes it very very easy to do these things. Traditionally you&amp;rsquo;d have to go through a lot of pain to add new fields to your database &amp;ndash; specifically if you were dealing with SQL databases. The Django ORM is very much batteries included.&lt;/p&gt;
+
+&lt;h2 id=&#34;writing-our-first-viewset:c14673d221a5785f50bc4d43002090cd&#34;&gt;Writing our first ViewSet&lt;/h2&gt;
+
+&lt;p&gt;A ViewSet in Django Rest Framework is defined as &amp;ldquo;Django REST framework allows you to combine the logic for a set of related views in a single class, called a ViewSet. In other frameworks you may also find conceptually similar implementations named something like &amp;lsquo;Resources&amp;rsquo; or &amp;lsquo;Controllers&amp;rsquo;&amp;rdquo; (&lt;a href=&#34;http://www.django-rest-framework.org/api-guide/viewsets/&#34;&gt;ref&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s go back into our events app. Just &lt;code&gt;cd&lt;/code&gt; into it. Here create a file called &lt;code&gt;views.py&lt;/code&gt;. This is the file that is incharge of handling what happens when something tries to reach your events endpoint. Here you should put:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# -*- coding: utf-8 -*-
+from .models import Event
+from .serializers import EventSerializer
+from rest_framework import viewsets
+
+
+class EventsViewSet(viewsets.ModelViewSet):
+    serializer_class = EventSerializer
+
+    def get_queryset(self,):
+        queryset = Event.objects.all()
+        uid = self.kwargs.get(&#39;pk&#39;)
+        if uid:
+            return queryset.filter(pk=uid)
+        else:
+            return queryset
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is a ViewSet. Basically when a request comes it &amp;ndash; it calls &lt;code&gt;get_queryset&lt;/code&gt; to get a &lt;code&gt;queryset&lt;/code&gt;, which is what it has to return. A queryset can just be seen as an array of instances of the &lt;code&gt;Event&lt;/code&gt; model. When you do &lt;code&gt;/events&lt;/code&gt; you want it to return all the events, but when you do &lt;code&gt;/events/1&lt;/code&gt; you want it to return the event of &lt;code&gt;id&lt;/code&gt; 1. In Django this &lt;code&gt;id&lt;/code&gt; is called &lt;code&gt;pk&lt;/code&gt; or primary key. So we&amp;rsquo;re checking to see if &lt;code&gt;uid&lt;/code&gt; is not None, and if it is not we want to filter the queryset and return the event with that ID.&lt;/p&gt;
+
+&lt;p&gt;Now we have to write a Serializer. A Serializer in Django Rest Framework is defined as &amp;ldquo;Serializers allow complex data such as querysets and model instances to be converted to native Python datatypes that can then be easily rendered into JSON, XML or other content types. Serializers also provide deserialization, allowing parsed data to be converted back into complex types, after first validating the incoming data&amp;rdquo; (&lt;a href=&#34;http://www.django-rest-framework.org/api-guide/serializers/&#34;&gt;ref&lt;/a&gt;).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# -*- coding: utf-8 -*-
+from .models import Event
+from rest_framework import serializers
+
+
+class EventSerializer(serializers.HyperlinkedModelSerializer):
+
+    def to_representation(self, obj):
+        return {
+            &#39;id&#39;: obj.pk,
+            &#39;name&#39;: obj.name,
+            &#39;description&#39;: obj.description,
+            &#39;date&#39;: obj.date,
+            &#39;image&#39;: obj.image,
+        }
+
+    class Meta:
+        model = Event
+        fields = (&#39;name&#39;, &#39;description&#39;, &#39;date&#39;, &#39;image&#39;,)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;setting-up-our-urls:c14673d221a5785f50bc4d43002090cd&#34;&gt;Setting up our URLs&lt;/h2&gt;
+
+&lt;p&gt;We&amp;rsquo;ve now finished our ViewSet and our Serializer! Now we can finally go ahead and preview our API. But first, we have to set up our &lt;code&gt;urls.py&lt;/code&gt; file! Change directories into the &lt;code&gt;apps&lt;/code&gt; folder. In the &lt;code&gt;apps&lt;/code&gt; folder write a file called &lt;code&gt;router.py&lt;/code&gt;. In this file you can put:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# -*- coding: utf-8 -*-
+from rest_framework import routers
+from today.apps.events.views import EventsViewSet
+
+router = routers.DefaultRouter()
+router.register(r&#39;events&#39;, EventsViewSet, base_name=&#39;event&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the &lt;code&gt;urls.py&lt;/code&gt; file put:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# -*- coding: utf-8 -*-
+from django.conf.urls import include, url
+from django.contrib import admin
+
+from today.apps.router import router
+
+urlpatterns = [
+    url(r&#39;^admin/&#39;, include(admin.site.urls)),
+    url(r&#39;^api/&#39;, include(router.urls)),
+]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now you can start up your application. &lt;code&gt;./manage.py runserver&lt;/code&gt;. In your browser visit &lt;code&gt;http://localhost:8000/api/events/&lt;/code&gt;. This is your API! When you open this on incognito you should be able to your API, and make a GET request to get all your events data. If you want to format it as JSON try visit this url &amp;ndash; &lt;code&gt;http://localhost:8000/api/events/?format=json&lt;/code&gt;. When you push things into production you can make this format by default. Django Rest Framework provides this clean user interface to allow you to play around with your data easily. Try and add some data! When you visit &lt;code&gt;http://localhost:8000/api/events/&lt;/code&gt; at the bottom there should be an area called &lt;code&gt;HTML form&lt;/code&gt;. Here you can add data. Here&amp;rsquo;s some sample data:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Name: Party on Broadway
+Description: There&#39;s a party on Broadway!
+Date: 01/20/2016, 12:00 PM
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or if you want to create it through &lt;code&gt;Raw data&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+    &amp;quot;name&amp;quot;: &amp;quot;Party on Broadway&amp;quot;,
+    &amp;quot;description&amp;quot;: &amp;quot;There&#39;s a party on Broadway!&amp;quot;,
+    &amp;quot;date&amp;quot;: &amp;quot;2016-01-20T12:00:00Z&amp;quot;,
+    &amp;quot;image&amp;quot;: &amp;quot;&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This should return:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;HTTP 201 Created
+Allow: GET, POST, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+{
+    &amp;quot;date&amp;quot;: &amp;quot;2016-01-20T12:00:00Z&amp;quot;,
+    &amp;quot;description&amp;quot;: &amp;quot;There&#39;s a party on Broadway!&amp;quot;,
+    &amp;quot;id&amp;quot;: 1,
+    &amp;quot;image&amp;quot;: &amp;quot;&amp;quot;,
+    &amp;quot;name&amp;quot;: &amp;quot;Party on Broadway&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now when you visit the &lt;code&gt;/api/events&lt;/code&gt; API endpoint &amp;ndash; you should see:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;HTTP 200 OK
+Allow: GET, POST, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+[
+    {
+        &amp;quot;date&amp;quot;: &amp;quot;2016-01-20T12:00:00Z&amp;quot;,
+        &amp;quot;description&amp;quot;: &amp;quot;There&#39;s a party on Broadway!&amp;quot;,
+        &amp;quot;id&amp;quot;: 1,
+        &amp;quot;image&amp;quot;: &amp;quot;&amp;quot;,
+        &amp;quot;name&amp;quot;: &amp;quot;Party on Broadway&amp;quot;
+    }
+]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we have to work on some permissions. Anyone can currently add data to the API endpoint right now. Django Rest Framework comes with a permissions framework that allows us to fix this very easily! Go back to the &lt;code&gt;settings.py&lt;/code&gt; file, and add a new variable to it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;REST_FRAMEWORK = {
+    &#39;DEFAULT_PERMISSION_CLASSES&#39;: [
+        &#39;rest_framework.permissions.IsAuthenticatedOrReadOnly&#39;
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Django Rest Framework has a bunch of settings that you can use here. It also has a permissions framework for each model. So you can declare and customize your own permissions depending on each model. For example, if you have user profiles you can customize permissions for the user to be able to edit their own permissions, but not others. After you add this line &amp;ndash; you should no longer be able to add events. Now you&amp;rsquo;ll have to create a super user in Django, and use the &lt;code&gt;admin&lt;/code&gt; feature! Run the following command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;./manage.py createsuperuser
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And follow the details. It should ask you:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Username (leave blank to use &#39;abhi&#39;): abhi
+Email address: hi@abhi.co
+Password: xxxxxxx1
+Password (again): xxxxxxx1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now visit &lt;code&gt;http://localhost:8000/admin/&lt;/code&gt;, and fill in your details. Now you should see the &lt;code&gt;admin&lt;/code&gt; panel. You should see &lt;code&gt;Groups&lt;/code&gt;, &lt;code&gt;Users&lt;/code&gt;, and &lt;code&gt;Events&lt;/code&gt;. Here you can create, read, updated or delete new events, groups, or users. When you add new models you should see them appear here as well! If you visit the &lt;code&gt;Events&lt;/code&gt; section you should see the &amp;ldquo;Party on Broadway&amp;rdquo; event there. You should be able to create, read, updated or delete it!&lt;/p&gt;
+
+&lt;p&gt;When you visit &lt;code&gt;http://localhost:8000/api/events/&lt;/code&gt; now &amp;ndash; you should be able to add an event again! When you open it on incognito you won&amp;rsquo;t be able to add an event. That&amp;rsquo;s great! This is very basic security, and you can definitely do better.&lt;/p&gt;
+
+&lt;p&gt;Moreover, you should also be able to visit &lt;code&gt;http://localhost:8000/api/events/1&lt;/code&gt;, and see only the event with &lt;code&gt;id&lt;/code&gt; = 1. We&amp;rsquo;ve managed to create a very simple REST API with a single endpoint.&lt;/p&gt;
+
+&lt;p&gt;Your finally directory structure would be:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.
+└── today-api
+    ├── requirements.txt
+    └── today
+        ├── db.sqlite3
+        ├── manage.py
+        └── today
+            ├── __init__.py
+            ├── apps
+            │   ├── __init__.py
+            │   ├── events
+            │   │   ├── __init__.py
+            │   │   ├── admin.py
+            │   │   ├── migrations
+            │   │   │   ├── 0001_initial.py
+            │   │   │   └── __init__.py
+            │   │   ├── models.py
+            │   │   ├── serializers.py
+            │   │   └── views.py
+            │   └── router.py
+            ├── settings.py
+            ├── urls.py
+            └── wsgi.py
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the next Prototyping tutorial, we will go through how to hook up this REST API made using Django with a React Native iOS app!&lt;/p&gt;
+
+&lt;h2 id=&#34;sources:c14673d221a5785f50bc4d43002090cd&#34;&gt;Sources&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.djangoproject.com/en/1.9/&#34;&gt;Django documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>Using CircleCI to automate builds</title>

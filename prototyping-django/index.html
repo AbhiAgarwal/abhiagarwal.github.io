@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.15" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content='Abhi Agarwal codes' property='og:title'>
+<meta content='website' property='og:type'>
+<meta content='http://code.abhi.co/' property='og:url'>
+<meta content='Abhi Agarwal' property='og:site_name'>
+<meta name="description" content="Abhi Agarwal code">
+<meta name="keywords" content="Abhi Agarwal, Abhi Mangal Agarwal, Abhi, Agarwal, NYU, Abhi NYU, Abhi Agarwal NYU, nyu, Agarwal Abhi, Software Development, Software Engineering, Abhi Software, Abhi code, Abhicodes, abhicodes">
+<meta content='Abhi codes' property='og:description'>
+<link href='favicon.ico' rel='shortcut icon' type='image/x-icon'>
+<link href='https://fonts.googleapis.com/css?family=Gentium+Book+Basic:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
+<link rel="stylesheet" href="/css/normalize.css">
+<link rel="stylesheet" href="/css/skeleton.css">
+<link rel="stylesheet" href="/css/custom.css">
+<link rel="alternate" href="/index.xml" type="application/rss+xml" title="abhicodes">
+<title>Prototyping using Django - abhicodes</title>
+</head>
+<body>
+
+<div class="container">
+
+	<header role="banner">
+		
+        <a href="/"><h1 class="site-title">abhicodes</h1></a>
+	</header>
+
+
+	<main role="main">
+		<article itemscope itemtype="http://schema.org/BlogPosting">
+			<h1 class="entry-title" itemprop="headline">Prototyping using Django</h1>
+			<span class="entry-meta"><time itemprop="datePublished" datetime="2016-01-20">January 20, 2016</time></span>
+			<section itemprop="entry-text">
+				
+
+<p>I am writing a series on how to prototype and release a product very fast using just a few tools! This is a three-part tutorial. The first part will be writing an API in Django. The second part will be writing an iOS app using React-native, and the last part will be writing a web app in Angular.JS. These three tools will allow you to prototype and push something out the door very quickly!</p>
+
+<hr />
+
+<p>Lets get started with writing our API in Django! All you need to know for now is that “Django is a high-level Python Web framework”. If you’re not sure what a web framework is or haven’t built an API in the past then just follow along, and hopefully you’ll get the gist of it!</p>
+
+<p>In this tutorial we’ll be using Python 2.7.10. We&rsquo;re going to be making an app to show a list of events that are happening. Firstly, lets setup a <a href="http://docs.python-guide.org/en/latest/dev/virtualenvs">virtual environment</a>! Specifically we’ll be using <a href="http://virtualenvwrapper.readthedocs.org/en/latest/index.html">virtualenvwrapper</a>. This allows you to easily switch between virtual environments. If you’ve already setup virtual environments - feel free to use your own and skip this part.</p>
+
+<p>Run these following commands in your Terminal:</p>
+
+<pre><code class="language-bash">pip install virtualenv
+pip install virtualenvwrapper
+</code></pre>
+
+<p>Put these into your <code>~/.bash_profile</code>:</p>
+
+<pre><code class="language-bash">export WORKON_HOME=$HOME/.virtualenvs
+source /usr/local/bin/virtualenvwrapper.sh
+</code></pre>
+
+<p>Now that you have <code>virtualenvwrapper</code> installed, you can create a virtual environment by running <code>mkvirtualenv &lt;project_name&gt;</code>. We&rsquo;re going to be calling our project <code>today</code>. This is just the name of your product. Substitute it with whatever you want! <code>todayapp</code> is just the name of the virtual environment - feel free to call it your project name. So go ahead and run:</p>
+
+<pre><code class="language-bash">mkvirtualenv todayapp
+</code></pre>
+
+<p>After you create this virtual environment you should be inside it! You should see something like this: <code>(todayapp)abhiagarwal at Abhis-MacBook-Pro in ~</code> in your Terminal window. The first part just lets you know which virtual environment you are in. To leave the virtual environment just do <code>deactivate</code>, and to go into a virtual environment run <code>workon todayapp</code>.</p>
+
+<p>This is great! Now you have a virtual environment setup. We can start building our Django API! Let&rsquo;s start the Django development! First you&rsquo;ll need to install django in your virtual environment. So stay in the virtual environment you&rsquo;re in, and run:</p>
+
+<pre><code class="language-bash">pip install Django==1.9
+</code></pre>
+
+<p>This should install Django with the version 1.9. We&rsquo;ll stick with version 1.9 since it&rsquo;s the newest version (at the time this post was written). If you want to look at all the Python packages that are available in your virtual environment you can do a <code>pip freeze</code>. Right now when you do run <code>pip freeze</code> you should see:</p>
+
+<pre><code class="language-bash">Django==1.9
+wheel==0.24.0
+</code></pre>
+
+<p>This should have installed a command in your environment called <code>django-admin</code>. We&rsquo;ll put our API in a folder called <code>today-api</code>. So go ahead and do:</p>
+
+<pre><code class="language-bash">mkdir today-api
+cd today-api
+</code></pre>
+
+<p>The location of where this is on your computer is not too important as this point. To start a new Django project you can run:</p>
+
+<pre><code class="language-bash">django-admin startproject today
+</code></pre>
+
+<p>This will create a directory called today in the folder. At this point you should see the following structure:</p>
+
+<pre><code>.
+├── today-api
+    └── today
+        ├── manage.py
+        └── today
+            ├── __init__.py
+            ├── settings.py
+            ├── urls.py
+            └── wsgi.py
+</code></pre>
+
+<p>Each of these files are responsible for how your Django app will run. Taken from the <a href="https://docs.djangoproject.com/en/1.9/intro/tutorial01/">Django documentation</a> (which is quite incredible and useful):</p>
+
+<ul>
+<li>&ldquo;The outer <code>today/</code> root directory is just a container for your project. Its name doesn’t matter to Django; you can rename it to anything you like.&rdquo;</li>
+<li>&ldquo;<code>manage.py</code>: A command-line utility that lets you interact with this Django project in various ways. You can read all the details about manage.py in <a href="https://docs.djangoproject.com/en/1.9/ref/django-admin/">django-admin and manage.py</a>.&rdquo;</li>
+<li>&ldquo;The inner <code>today/</code> directory is the actual Python package for your project. Its name is the Python package name you’ll need to use to import anything inside it (e.g. today.urls).&rdquo;</li>
+<li>&ldquo;<code>today/__init__.py</code>: An empty file that tells Python that this directory should be considered a Python package. (Read more about <a href="https://docs.python.org/2/tutorial/modules.html#packages">packages</a> in the official Python docs if you’re a Python beginner.)&rdquo;</li>
+<li>&ldquo;<code>today/settings.py</code>: Settings/configuration for this Django project. Django settings will tell you all about how settings work.&rdquo;</li>
+<li>&ldquo;<code>today/urls.py</code>: The URL declarations for this Django project; a “table of contents” of your Django-powered site. You can read more about URLs in <a href="https://docs.djangoproject.com/en/1.9/topics/http/urls/">URL dispatcher</a>.&rdquo;</li>
+<li>&ldquo;<code>today/wsgi.py</code>: An entry-point for WSGI-compatible web servers to serve your project. See <a href="https://docs.djangoproject.com/en/1.9/howto/deployment/wsgi/">How to deploy with WSGI</a> for more details.&rdquo;</li>
+</ul>
+
+<p>Especially when you&rsquo;re prototyping you don&rsquo;t want to reinvent the wheel. So we&rsquo;re going to be replying on a couple Python packages that will help us accelerate our development. First of all we&rsquo;re going to be setting up the structure of our application. This is where we begin using some Django best practices.</p>
+
+<p>To initially run your Django app you can <code>cd today</code>, and run <code>./manage.py runserver</code>. It should alert you by saying that &ldquo;you have unapplied migrations; your app may not work properly until they are applied&rdquo;. This is Django telling you that you basically have to run database migrations. You can simply follow what Django tells you to do and run <code>python manage.py migrate</code>. This is interchangeable with <code>./manage.py migrate</code>. Basically what this means is that Django is importing the necessary models at the beginning into your database. Initially, Django uses SQLite. So when you run the migrations you should see <code>db.sqlite3</code> in your directory. We&rsquo;re going to be switching to using another database later on, but for now we&rsquo;ll stick with SQLite.</p>
+
+<p>Now you should be able to run your Django app. Run it, and visit <code>http://127.0.0.1:8000/</code> on your computer. When you visit this URL you should see <code>It worked!</code> at the beginning! Congrats! You&rsquo;ve managed to run your Django web server. Whatever happens next &ndash; you&rsquo;ve still managed to run your Django application!</p>
+
+<h2 id="adding-apps:c14673d221a5785f50bc4d43002090cd">Adding apps</h2>
+
+<p>The main folder in your Django project (called <code>today</code>) is called a project. Now we have to add <code>apps</code> (applications). These apps are the smaller modules in your Django application that represent what you&rsquo;re building. Let&rsquo;s set up our apps folder:</p>
+
+<pre><code>$ cd today
+$ mkdir apps
+$ cd apps
+$ touch __init__.py
+$ mkdir events
+$ cd events
+$ touch __init__.py
+</code></pre>
+
+<p>Now your directory structure should look like this:</p>
+
+<pre><code>.
+└── today-api
+    └── today
+        ├── db.sqlite3
+        ├── manage.py
+        └── today
+            ├── __init__.py
+            ├── apps
+            │   ├── __init__.py
+            │   └── events
+            │       └── __init__.py
+            ├── settings.py
+            ├── urls.py
+            └── wsgi.py
+</code></pre>
+
+<p>Great! Now we&rsquo;ve setup an app called <code>events</code> in our project. This will be the app in which we write the logic for our Events API. First, create a file called <code>models.py</code> in the folder <code>events</code>. You can do this by doing <code>touch models.py</code>. In that folder we&rsquo;re going to be writing the logic for our Event model. A model can be seen as a grouping of different methods and variables. If you have not encountered Object Oriented Programming before then don&rsquo;t worry! Our Event model is just a blueprint for how we will save and load data from the database. In the file <code>models.py</code> paste this following code:</p>
+
+<pre><code class="language-python"># -*- coding: utf-8 -*-
+from django.db import models
+
+
+class Event(models.Model):
+    name = models.TextField(blank=False, max_length=100)
+    description = models.TextField(blank=False, max_length=1000)
+    date = models.DateTimeField(blank=False, null=False)
+
+    def __unicode__(self):
+        return self.name
+</code></pre>
+
+<p>We initially have three fields in our model. The first one is called <code>name</code>, and the second one is called <code>description</code>, and the third one is called <code>date</code>. The name and description field are of type <code>TextField</code>. Django comes with &ldquo;batteries installed&rdquo;, which means that it provides us with a lot of things we can just start using. The date field is of type <code>DateTimeField</code>. We can pass in certain parameters into these fields. In the name field we pass in:</p>
+
+<ul>
+<li><code>blank=False</code> &ndash; which means that it can&rsquo;t be blank &ndash; it&rsquo;s not an optional field</li>
+<li><code>max_length=100</code> &ndash; the name of the event can be at most 100 characters.</li>
+</ul>
+
+<p>In the date field we pass in:</p>
+
+<ul>
+<li><code>null=False</code> &ndash; Will not set the value to be NULL in your database. &ldquo;Blank values for Django field types such as DateTimeField or ForeignKey will be stored as NULL in the DB&rdquo; (<a href="http://stackoverflow.com/questions/8609192/differentiate-null-true-blank-true-in-django">ref</a>).</li>
+</ul>
+
+<p>Here we&rsquo;ve setup a basic model for a single event. Each event must have a name, a description, and a date. We should also go ahead and add an <code>image</code> field. An event could have an image! Underneath date you should add:</p>
+
+<p><code>image = models.URLField(blank=True, max_length=500)</code></p>
+
+<p>This uses the <code>URLField</code> that is built into Django. This is different from <code>TextField</code> because it internally validates and makes sure the URL is of correct format when you add it. Here we use <code>blank=True</code>, which means that image is an optional field. When we&rsquo;re adding a new event we might not have an image for it &ndash; the optional part makes it so we don&rsquo;t have too. The final product should look like this:</p>
+
+<pre><code class="language-python"># -*- coding: utf-8 -*-
+from django.db import models
+
+
+class Event(models.Model):
+    name = models.TextField(blank=False, max_length=100)
+    description = models.TextField(blank=False, max_length=1000)
+    date = models.DateTimeField(blank=False, null=False)
+    image = models.URLField(blank=True, max_length=500)
+
+    def __unicode__(self):
+        return self.name
+</code></pre>
+
+<p>Great! So we&rsquo;ve added our basic model. Now, add a file called <code>admin.py</code> by doing <code>touch admin.py</code>. Django comes built in with an admin interface where you&rsquo;re able to see all the data in your models. This file tells Django to add your model to the admin interface. In this file you should go ahead and just add:</p>
+
+<pre><code class="language-python"># -*- coding: utf-8 -*-
+from django.contrib import admin
+
+from .models import Event
+
+admin.site.register(Event)
+</code></pre>
+
+<p>Now that we&rsquo;ve added our models, and admin files we will begin to start building our API views. First we&rsquo;ve to add a Django package and configure it. We&rsquo;re going to be using Django Rest Framework, which makes it easy to build REST APIs. Go ahead and run this (in your virtual environment):</p>
+
+<p><code>pip install djangorestframework==3.3.2</code></p>
+
+<p>At this point we should create a <code>requirements.txt</code> file. This will allow you to track the Python packages you&rsquo;ve installed. Go back to the base <code>today-api</code> folder. Then run <code>touch requirements.txt</code>. Now you&rsquo;re able to use <code>pip freeze</code>, and put the output into requirements.txt. To do this just execute the command <code>pip freeze &gt; requirements.txt</code>. This should put your current Python packages into the file. To view the file you can just run <code>cat requirements.txt</code> in your Terminal. You should see:</p>
+
+<pre><code>Django==1.9
+djangorestframework==3.3.2
+wheel==0.24.0
+</code></pre>
+
+<p>Having your requirements in a file is important. In the future to install your requirements you&rsquo;re simply able to do <code>pip install -r requirements.txt</code>. Your directory should finally look like this now:</p>
+
+<pre><code>.
+└── today-api
+    ├── requirements.txt
+    └── today
+        ├── db.sqlite3
+        ├── manage.py
+        └── today
+            ├── __init__.py
+            ├── apps
+            │   ├── __init__.py
+            │   └── events
+            │       ├── __init__.py
+            │       ├── admin.py
+            │       └── models.py
+            ├── settings.py
+            ├── urls.py
+            └── wsgi.py
+</code></pre>
+
+<h2 id="setting-up-settings-py:c14673d221a5785f50bc4d43002090cd">Setting up settings.py</h2>
+
+<p>Now open up your <code>settings.py</code> file. It should be in the same directory as the <code>apps</code> folder is. In the <code>settings.py</code> file you should see a variable called <code>INSTALLED_APPS</code>. This is what governs what apps Django runs for you when you do <code>./manage.py runserver</code>. We have to add our new apps to it. To this we will add <code>'rest_framework'</code>, and <code>'today.apps.events'</code>. Django paths are set relative to folder <code>manage.py</code> is in. So your files will all be relative to the folder <code>today</code>. The <code>urls.py</code> file will be <code>today.urls</code>, etc. Lets now change the <code>INSTALLED_APPS</code> to:</p>
+
+<pre><code class="language-python">INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'rest_framework',
+    'today.apps.events',
+]
+</code></pre>
+
+<h2 id="making-migrations:c14673d221a5785f50bc4d43002090cd">Making migrations</h2>
+
+<p>Now we have to do something exciting. We have to run migrations! So now that you&rsquo;ve created an Event model we have to take the schema you wrote, and make Django make a Table for that in the database. You&rsquo;ve virtually constructed this Model with fields, but now how are we going to mirror this structure in the database? Well! Django comes built in with these tools. Run <code>./manage.py makemigrations events</code>. The <code>events</code> is which specific app we are talking about. When you run this &ndash; it should return:</p>
+
+<pre><code class="language-python">Migrations for 'events':
+  0001_initial.py:
+    - Create model Event
+</code></pre>
+
+<p>If it prints something different then you&rsquo;ve made a mistake somewhere. This command just creates the migrations. It creates a folder called <code>migrations</code> (which you should not remove!) inside your <code>apps/events</code> folder, and creates a python file inside it with the specifics of your schema. Now you should run <code>./manage.py migrate events</code>. This should return:</p>
+
+<pre><code class="language-python">Operations to perform:
+  Apply all migrations: events
+Running migrations:
+  Rendering model states... DONE
+  Applying events.0001_initial... OK
+</code></pre>
+
+<p>This means that we&rsquo;ve successfully taken our schema and added these fields into the database. Whenever you add a new field to your model &ndash; you should always make a migration (using <code>makemigrations</code>), and then migrate it (using <code>migrate</code>). Django makes it very very easy to do these things. Traditionally you&rsquo;d have to go through a lot of pain to add new fields to your database &ndash; specifically if you were dealing with SQL databases. The Django ORM is very much batteries included.</p>
+
+<h2 id="writing-our-first-viewset:c14673d221a5785f50bc4d43002090cd">Writing our first ViewSet</h2>
+
+<p>A ViewSet in Django Rest Framework is defined as &ldquo;Django REST framework allows you to combine the logic for a set of related views in a single class, called a ViewSet. In other frameworks you may also find conceptually similar implementations named something like &lsquo;Resources&rsquo; or &lsquo;Controllers&rsquo;&rdquo; (<a href="http://www.django-rest-framework.org/api-guide/viewsets/">ref</a>).</p>
+
+<p>Let&rsquo;s go back into our events app. Just <code>cd</code> into it. Here create a file called <code>views.py</code>. This is the file that is incharge of handling what happens when something tries to reach your events endpoint. Here you should put:</p>
+
+<pre><code class="language-python"># -*- coding: utf-8 -*-
+from .models import Event
+from .serializers import EventSerializer
+from rest_framework import viewsets
+
+
+class EventsViewSet(viewsets.ModelViewSet):
+    serializer_class = EventSerializer
+
+    def get_queryset(self,):
+        queryset = Event.objects.all()
+        uid = self.kwargs.get('pk')
+        if uid:
+            return queryset.filter(pk=uid)
+        else:
+            return queryset
+</code></pre>
+
+<p>This is a ViewSet. Basically when a request comes it &ndash; it calls <code>get_queryset</code> to get a <code>queryset</code>, which is what it has to return. A queryset can just be seen as an array of instances of the <code>Event</code> model. When you do <code>/events</code> you want it to return all the events, but when you do <code>/events/1</code> you want it to return the event of <code>id</code> 1. In Django this <code>id</code> is called <code>pk</code> or primary key. So we&rsquo;re checking to see if <code>uid</code> is not None, and if it is not we want to filter the queryset and return the event with that ID.</p>
+
+<p>Now we have to write a Serializer. A Serializer in Django Rest Framework is defined as &ldquo;Serializers allow complex data such as querysets and model instances to be converted to native Python datatypes that can then be easily rendered into JSON, XML or other content types. Serializers also provide deserialization, allowing parsed data to be converted back into complex types, after first validating the incoming data&rdquo; (<a href="http://www.django-rest-framework.org/api-guide/serializers/">ref</a>).</p>
+
+<pre><code class="language-python"># -*- coding: utf-8 -*-
+from .models import Event
+from rest_framework import serializers
+
+
+class EventSerializer(serializers.HyperlinkedModelSerializer):
+
+    def to_representation(self, obj):
+        return {
+            'id': obj.pk,
+            'name': obj.name,
+            'description': obj.description,
+            'date': obj.date,
+            'image': obj.image,
+        }
+
+    class Meta:
+        model = Event
+        fields = ('name', 'description', 'date', 'image',)
+</code></pre>
+
+<h2 id="setting-up-our-urls:c14673d221a5785f50bc4d43002090cd">Setting up our URLs</h2>
+
+<p>We&rsquo;ve now finished our ViewSet and our Serializer! Now we can finally go ahead and preview our API. But first, we have to set up our <code>urls.py</code> file! Change directories into the <code>apps</code> folder. In the <code>apps</code> folder write a file called <code>router.py</code>. In this file you can put:</p>
+
+<pre><code class="language-python"># -*- coding: utf-8 -*-
+from rest_framework import routers
+from today.apps.events.views import EventsViewSet
+
+router = routers.DefaultRouter()
+router.register(r'events', EventsViewSet, base_name='event')
+</code></pre>
+
+<p>In the <code>urls.py</code> file put:</p>
+
+<pre><code># -*- coding: utf-8 -*-
+from django.conf.urls import include, url
+from django.contrib import admin
+
+from today.apps.router import router
+
+urlpatterns = [
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^api/', include(router.urls)),
+]
+</code></pre>
+
+<p>Now you can start up your application. <code>./manage.py runserver</code>. In your browser visit <code>http://localhost:8000/api/events/</code>. This is your API! When you open this on incognito you should be able to your API, and make a GET request to get all your events data. If you want to format it as JSON try visit this url &ndash; <code>http://localhost:8000/api/events/?format=json</code>. When you push things into production you can make this format by default. Django Rest Framework provides this clean user interface to allow you to play around with your data easily. Try and add some data! When you visit <code>http://localhost:8000/api/events/</code> at the bottom there should be an area called <code>HTML form</code>. Here you can add data. Here&rsquo;s some sample data:</p>
+
+<pre><code>Name: Party on Broadway
+Description: There's a party on Broadway!
+Date: 01/20/2016, 12:00 PM
+</code></pre>
+
+<p>Or if you want to create it through <code>Raw data</code>:</p>
+
+<pre><code class="language-json">{
+    &quot;name&quot;: &quot;Party on Broadway&quot;,
+    &quot;description&quot;: &quot;There's a party on Broadway!&quot;,
+    &quot;date&quot;: &quot;2016-01-20T12:00:00Z&quot;,
+    &quot;image&quot;: &quot;&quot;
+}
+</code></pre>
+
+<p>This should return:</p>
+
+<pre><code>HTTP 201 Created
+Allow: GET, POST, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+{
+    &quot;date&quot;: &quot;2016-01-20T12:00:00Z&quot;,
+    &quot;description&quot;: &quot;There's a party on Broadway!&quot;,
+    &quot;id&quot;: 1,
+    &quot;image&quot;: &quot;&quot;,
+    &quot;name&quot;: &quot;Party on Broadway&quot;
+}
+</code></pre>
+
+<p>Now when you visit the <code>/api/events</code> API endpoint &ndash; you should see:</p>
+
+<pre><code>HTTP 200 OK
+Allow: GET, POST, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+[
+    {
+        &quot;date&quot;: &quot;2016-01-20T12:00:00Z&quot;,
+        &quot;description&quot;: &quot;There's a party on Broadway!&quot;,
+        &quot;id&quot;: 1,
+        &quot;image&quot;: &quot;&quot;,
+        &quot;name&quot;: &quot;Party on Broadway&quot;
+    }
+]
+</code></pre>
+
+<p>Now we have to work on some permissions. Anyone can currently add data to the API endpoint right now. Django Rest Framework comes with a permissions framework that allows us to fix this very easily! Go back to the <code>settings.py</code> file, and add a new variable to it:</p>
+
+<pre><code class="language-python">REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+    ]
+}
+</code></pre>
+
+<p>Django Rest Framework has a bunch of settings that you can use here. It also has a permissions framework for each model. So you can declare and customize your own permissions depending on each model. For example, if you have user profiles you can customize permissions for the user to be able to edit their own permissions, but not others. After you add this line &ndash; you should no longer be able to add events. Now you&rsquo;ll have to create a super user in Django, and use the <code>admin</code> feature! Run the following command:</p>
+
+<pre><code>./manage.py createsuperuser
+</code></pre>
+
+<p>And follow the details. It should ask you:</p>
+
+<pre><code>Username (leave blank to use 'abhi'): abhi
+Email address: hi@abhi.co
+Password: xxxxxxx1
+Password (again): xxxxxxx1
+</code></pre>
+
+<p>Now visit <code>http://localhost:8000/admin/</code>, and fill in your details. Now you should see the <code>admin</code> panel. You should see <code>Groups</code>, <code>Users</code>, and <code>Events</code>. Here you can create, read, updated or delete new events, groups, or users. When you add new models you should see them appear here as well! If you visit the <code>Events</code> section you should see the &ldquo;Party on Broadway&rdquo; event there. You should be able to create, read, updated or delete it!</p>
+
+<p>When you visit <code>http://localhost:8000/api/events/</code> now &ndash; you should be able to add an event again! When you open it on incognito you won&rsquo;t be able to add an event. That&rsquo;s great! This is very basic security, and you can definitely do better.</p>
+
+<p>Moreover, you should also be able to visit <code>http://localhost:8000/api/events/1</code>, and see only the event with <code>id</code> = 1. We&rsquo;ve managed to create a very simple REST API with a single endpoint.</p>
+
+<p>Your finally directory structure would be:</p>
+
+<pre><code>.
+└── today-api
+    ├── requirements.txt
+    └── today
+        ├── db.sqlite3
+        ├── manage.py
+        └── today
+            ├── __init__.py
+            ├── apps
+            │   ├── __init__.py
+            │   ├── events
+            │   │   ├── __init__.py
+            │   │   ├── admin.py
+            │   │   ├── migrations
+            │   │   │   ├── 0001_initial.py
+            │   │   │   └── __init__.py
+            │   │   ├── models.py
+            │   │   ├── serializers.py
+            │   │   └── views.py
+            │   └── router.py
+            ├── settings.py
+            ├── urls.py
+            └── wsgi.py
+</code></pre>
+
+<p>In the next Prototyping tutorial, we will go through how to hook up this REST API made using Django with a React Native iOS app!</p>
+
+<h2 id="sources:c14673d221a5785f50bc4d43002090cd">Sources</h2>
+
+<ul>
+<li><a href="https://docs.djangoproject.com/en/1.9/">Django documentation</a></li>
+</ul>
+
+			</section>
+            <a href="https://twitter.com/share" class="twitter-share-button"{count} data-via="abhiagarwal">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+		</article>
+	</main>
+
+
+	<footer role="contentinfo">
+		<div class="hr"></div>
+		<div class="footer-link">
+			<a href="https://twitter.com/abhiagarwal" target="_blank">Twitter</a></span>
+			
+			<a href="http://github.com/abhiagarwal" target="_blank">GitHub</a></span>
+		</div>
+		<div class="copyright">Copyright &copy; Abhi Agarwal</div>
+	</footer>
+
+</div>
+
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-39634458-5', 'auto');
+	ga('send', 'pageview');
+</script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+</body>
+</html>
