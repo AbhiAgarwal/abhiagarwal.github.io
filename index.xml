@@ -435,6 +435,8 @@ Password (again): xxxxxxx1
             └── wsgi.py
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;p&gt;The final project is on Github &lt;a href=&#34;https://github.com/AbhiAgarwal/prototyping-django&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
 &lt;p&gt;In the next Prototyping tutorial, we will go through how to hook up this REST API made using Django with a React Native iOS app!&lt;/p&gt;
 
 &lt;h2 id=&#34;sources:c14673d221a5785f50bc4d43002090cd&#34;&gt;Sources&lt;/h2&gt;
